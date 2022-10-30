@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>3D CandleStick Chart
+        </title>
+        <script src="../build/three.js"></script>
+        <script src="../build/dat.gui.js"></script>
+        <script src="../build/ddv.js"></script>
+        <script src="./js/controls/OrbitControls.js"></script>
+        <style>
+            body {
+                margin: 0;
+                overflow: hidden;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="webgl-output"></div>
+        <script>
+                        
+            function init() {
+
+                var scene = new THREE.Scene();
+                var camera = new THREE.PerspectiveCamera(
+                    45,
+                    window.innerWidth / window.innerHeight,
+                    0.1,
+                    1000
+                );
+                // const gui = new dat.GUI();
+
+                var renderer = new THREE.WebGLRenderer();
+                renderer.setClearColor(new THREE.Color(0xFFFFFF));
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                renderer.shadowMap.enabled = true;
+                
+                //화면 마우스로 회전시키기
+                const controls = new THREE.OrbitControls(camera, renderer.domElement);
+                camera.position.set(-34.94411029990571,54.72636596405336,47.40521655688447);
+                controls.update();
+
+                
+
+                const color = 0xFFFFFF;
+                const intensity = 1;
+                const light = new THREE.DirectionalLight(color, intensity);
+                light.position.set(-10, 2, 4);
+                scene.add(light);
+
+                
+
+                function updateCamera() {
+                    camera.updateProjectionMatrix()
+                }
+
+                
+                let n = 15;
+                let nv = 10;
+                let arr1 = new Array(n);
+                for (var i = 0; i < n; i++) {
+                    arr1[i] = new Array(nv);
+                    for (let j =0;j<nv;j++){
+                        arr1[i][j]= Math.random()*20;
+                    }
+                }
+
+                
+
+                let x_label = ['x_1']
+                let z_label = ['z_1','z_2','z_3','z_4','z_5','z_6','z_7','z_8','z_9','z_10','z_11','z_12','z_13','z_14','z_15']
+
+                var ddv = new DDV(renderer.domElement);
+                
+                var chart = ddv.candelStick3Dchart(data = arr1,
+                                            boxwidth = 0.5,
+                                            boxheight = 0.5,
+                                            dst = 1,
+                                            x_label=x_label,
+                                            z_label=z_label,
+                                            use_auto_color = true,
+                                            yaxis_segment = 15,
+                                            boxcolor = 'rgb(10%, 40%, 80%)'
+                                        )
+                
+                scene.add(chart);
+                
+
+                document.getElementById("webgl-output").appendChild(renderer.domElement);
+                
+                window.addEventListener('mousemove', ddv.setPickPosition.bind(ddv));
+                window.addEventListener('mousedown', ddv.pickClickEvent.bind(ddv));
+                window.addEventListener('mouseout', ddv.clearPickPosition.bind(ddv));
+                window.addEventListener('mouseleave', ddv.clearPickPosition.bind(ddv));
+
+                renderScene();
+
+                function renderScene(time) {
+                    
+                    ddv.pick(ddv.get_position(), chart, camera, time);
+                    controls.update()
+                    
+                    requestAnimationFrame(renderScene);
+
+                    renderer.render(scene, camera);
+                    
+                }
+                
+            }
+            window.onload = init;
+        </script>
+    </body>
+</html>

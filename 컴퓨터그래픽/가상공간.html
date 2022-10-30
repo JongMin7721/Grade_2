@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>가상공간
+        </title>
+        <script src="./three.js"></script>
+        <script src="./OrbitControls.js"></script>
+        
+        <style>
+            body {
+                margin: 0;
+                overflow: hidden;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="webgl-output"></div>
+        <script>
+
+            function init() {
+
+                var scene = new THREE.Scene();
+                var camera = new THREE.PerspectiveCamera(
+                    45,
+                    window.innerWidth / window.innerHeight,
+                    0.1,
+                    10000
+                );
+                //const gui = new dat.GUI();
+
+                
+                var renderer = new THREE.WebGLRenderer();
+                renderer.setClearColor(new THREE.Color(0x000000));
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                renderer.shadowMap.enabled = true;
+
+                //화면 마우스로 회전시키기
+                const controls = new THREE.OrbitControls(camera, renderer.domElement);
+                camera.position.set(-100 , 100, 100);
+                controls.update();
+
+                //바닥
+                const pgeometry = new THREE.PlaneGeometry( 150, 150);
+                const pmaterial = new THREE.MeshStandardMaterial( {color: 0xffffff} );
+                const plane = new THREE.Mesh( pgeometry, pmaterial );
+                plane.rotation.x = 1.5* Math.PI
+                plane.position.set(0,0,0)
+                plane.receiveShadow =true;
+                scene.add( plane );
+
+                //벽
+                const pgeometry2 = new THREE.PlaneGeometry( 150, 75 );
+                const wall1 = new THREE.Mesh( pgeometry2, pmaterial );
+                wall1.rotation.x = 1.5* Math.PI;
+                wall1.position.set(0,-75,37.5)
+                wall1.receiveShadow =true;
+                plane.add( wall1 );
+
+                const wall2 = new THREE.Mesh( pgeometry2, pmaterial );
+                wall2.rotation.y = 1.5* Math.PI;
+                wall2.rotation.z = -1.5* Math.PI;
+                wall2.position.set(75,0,37.5)
+                wall2.receiveShadow =true;
+                plane.add( wall2 );
+
+                const wall3 = new THREE.Mesh( pgeometry2, pmaterial );
+                wall3.rotation.x = -1.5* Math.PI;
+                wall3.position.set(0,75,37.5)
+                wall3.receiveShadow =true;
+                plane.add( wall3 );
+
+                const wall4 = new THREE.Mesh( pgeometry2, pmaterial );
+                wall4.rotation.y = -1.5* Math.PI;
+                wall4.rotation.z = 1.5* Math.PI;
+                wall4.position.set(-75,0,37.5)
+                wall4.receiveShadow =true;
+                plane.add( wall4 );
+
+                //천장
+                const cellgeometry = new THREE.PlaneGeometry( 150, 150);
+                const cellpmaterial = new THREE.MeshStandardMaterial( {color: 0xffffff} );
+                const celling = new THREE.Mesh( pgeometry, pmaterial );
+                celling.rotation.y = 3* Math.PI;
+                celling.position.set(0,0,75)
+                celling.receiveShadow =true;
+                plane.add( celling );
+
+                //전구
+                const sphgeo = new THREE.SphereGeometry(2,20);
+                const sphmat = new THREE.MeshBasicMaterial({color: 0xcccc00});
+                const light_Sphere1 = new THREE.Mesh(sphgeo,sphmat);
+                light_Sphere1.position.set(0,0,-0.5);
+                celling.add(light_Sphere1);
+                light1 = new THREE.PointLight(0xffffff, .5,200,1);
+                light1.position.set(0,0,.5);
+                light1.castShadow = true;
+                celling.add(light1);
+
+                const pointLightHelper1 = new THREE.PointLightHelper( light1, 1 );
+                scene.add( pointLightHelper1 );
+                
+                
+                //책장 밑
+                cgeometry1 = new THREE.BoxGeometry(1, 30, 20);
+                cmaterial = new THREE.MeshPhongMaterial({ color: 0x28b463 });
+                cgeometry2 = new THREE.BoxGeometry(10, 1, 20);
+
+                bookshelf = new THREE.Mesh(cgeometry2, cmaterial);
+                bookshelf.position.set(4.5, 0, 1);
+                bookshelf.rotation.x = -1.5*Math.PI
+                bookshelf.castShadow = true;
+                bookshelf.receiveShadow = true;
+                plane.add(bookshelf);
+
+                //책장 뒷면
+                cube = new THREE.Mesh(cgeometry1, cmaterial);
+                cube.position.set(4.5,14,0);
+                cube.castShadow = true;
+                cube.receiveShadow = true;
+                bookshelf.add(cube);
+                //선반1
+                cube3 = new THREE.Mesh(cgeometry2, cmaterial);
+                cube3.position.set(0, 10, 0);
+                cube3.castShadow = true;
+                cube3.receiveShadow = true;
+                bookshelf.add(cube3);
+                //선반2
+                cube6 = new THREE.Mesh(cgeometry2, cmaterial);
+                cube6.position.set(0, 20, 0);
+                cube6.castShadow = true;
+                cube6.receiveShadow = true;
+                bookshelf.add(cube6);
+                //책장 천장
+                cube7 = new THREE.Mesh(cgeometry2, cmaterial);
+                cube7.position.set(0, 29, 0);
+                cube7.castShadow = true;
+                cube7.receiveShadow = true;
+                bookshelf.add(cube7);
+                //책장 옆면1
+                cgeometry3 = new THREE.BoxGeometry(10, 30, 1);
+                cube4 = new THREE.Mesh(cgeometry3, cmaterial);
+                cube4.position.set(0, 14, 9.5);
+                cube4.castShadow = true;
+                cube4.receiveShadow = true;
+                bookshelf.add(cube4);
+                //책장 옆면2
+                cube5 = new THREE.Mesh(cgeometry3, cmaterial);
+                cube5.position.set(0, 14, -9.5);
+                cube5.castShadow = true;
+                cube5.receiveShadow = true;
+                bookshelf.add(cube5);
+
+                //책1
+                bgeometry = new THREE.BoxGeometry(5,7,0.5);
+                bmaterial = new THREE.MeshPhongMaterial( { color: 0x964b00 } );
+                book = new THREE.Mesh(bgeometry,bmaterial);
+                book.position.set(-2, 14, -8);
+                book.rotation.x = 72;
+                book.castShadow = true;
+                book.receiveShadow = true;
+                bookshelf.add(book);
+
+                //책2
+                b2geometry = new THREE.BoxGeometry(5,7,1);
+                b2material = new THREE.MeshPhongMaterial( { color: 0xffffff } );
+                book2 = new THREE.Mesh(b2geometry,b2material);
+                book2.position.set(-2, 24, 8.5);
+                book2.castShadow = true;
+                book2.receiveShadow = true;
+                bookshelf.add(book2);
+
+                //책3
+                b3material = new THREE.MeshPhongMaterial( { color: 0xaabb88 } );
+                book3 = new THREE.Mesh(b2geometry,b3material);
+                book3.position.set(-2, 23.5, 5.4);
+                book3.rotation.x = 7;
+                book3.castShadow = true;
+                book3.receiveShadow = true;
+                bookshelf.add(book3);
+
+                //책4
+                b3geometry = new THREE.BoxGeometry(7,1.5,5);
+                book4 = new THREE.Mesh(b3geometry,bmaterial);
+                book4.position.set(-3, 21.25, -3);
+                book4.castShadow = true;
+                book4.receiveShadow = true;
+                bookshelf.add(book4);
+
+                //빛
+                plight = new THREE.PointLight(0xffffff, .7, 2100, 2);
+                plight.position.set(-50, 35, 35);
+                plight.castShadow = true;
+                plane.add(plight);
+
+                const pointLightHelper = new THREE.PointLightHelper( plight, 1 );
+                scene.add( pointLightHelper );
+
+                //빛2
+                plight2 = new THREE.PointLight(0xffffff, .7, 2100, 1);
+                plight2.position.set(-50, -35, 35);
+                plight2.castShadow = true;
+                plane.add(plight2);
+
+                const pointLightHelper2 = new THREE.PointLightHelper( plight2, 1 );
+                scene.add( pointLightHelper2 );
+
+                document.getElementById("webgl-output").appendChild(renderer.domElement);
+                renderScene();
+
+                function renderScene() {
+                    
+                    controls.update()
+                    requestAnimationFrame(renderScene);
+                    renderer.render(scene, camera);
+
+                }
+            }
+            window.onload = init;
+        </script>
+    </body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>ThreeJS
+        </title>
+        <script src="./three.js"></script>
+        <script src="./dat.gui.js"></script>
+        <script src="./OrbitControls.js"></script>
+        
+        <style>
+            body {
+                margin: 0;
+                overflow: hidden;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="webgl-output"></div>
+        <script>
+
+            function init() {
+
+                var scene = new THREE.Scene();
+                var camera = new THREE.PerspectiveCamera(
+                    45,
+                    window.innerWidth / window.innerHeight,
+                    0.1,
+                    1000
+                );
+                const gui = new dat.GUI();
+
+                var renderer = new THREE.WebGLRenderer();
+                renderer.setClearColor(new THREE.Color(0x000000));
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                renderer.shadowMap.enabled = true;
+
+                //화면 마우스로 회전시키기
+                const controls = new THREE.OrbitControls(camera, renderer.domElement);
+                camera.position.set(-20, 20, 20);
+                controls.update();
+
+                // var axes = new THREE.AxesHelper(15);
+                // scene.add(axes);
+
+                const color = 0xFFFFFF;
+                const intensity = 1;
+                const light = new THREE.DirectionalLight(color, intensity);
+                light.position.set(-10, 2, 4);
+                scene.add(light);
+
+                // gui
+                //     .add(axes, 'visible')
+                //     .name("축표시")
+                
+
+                function updateCamera() {
+                    camera.updateProjectionMatrix()
+                }
+
+                const geometry = new THREE.BoxGeometry( 1, 1, 1 );
+                const material = new THREE.MeshPhongMaterial( {color: 0x00ff00} );
+                const cube = new THREE.Mesh( geometry, material );
+                scene.add( cube );
+
+                
+                // const edges = new THREE.EdgesGeometry( geometry );
+                // const line2 = new THREE.LineSegments( edges, new THREE.LineBasicMaterial( { color: 0xffffff } ) );
+                // scene.add( line2 );
+
+                const geometry2 = new THREE.TorusKnotGeometry( 0.5, 0.3, 100, 16 );
+                const material2 = new THREE.MeshPhongMaterial( { color: 0xffff00 } );
+                const torusKnot = new THREE.Mesh( geometry2, material2 );
+                torusKnot.position.x = -3;
+                scene.add( torusKnot );
+
+                const geometry3 = new THREE.DodecahedronGeometry(radius=1 );
+                // const material3 = new THREE.MeshPhongMaterial( { color: 0xff0000 } );
+                // const dode = new THREE.Mesh( geometry3, material3 );
+                // dode.position.x = 3;
+                // scene.add( dode );
+
+                const wireframe = new THREE.WireframeGeometry( geometry3 );
+                // const material_line = new THREE.LineBasicMaterial({
+                //     color : 0x00ff00,
+                //     linewidth :1
+                // })
+                const line = new THREE.LineSegments( wireframe );
+                line.material.depthTest = true;
+                // line.material.opacity = 0.25;
+                // line.material.transparent = false;
+                line.position.x = 3;
+                scene.add( line );
+
+                
+
+                document.getElementById("webgl-output").appendChild(renderer.domElement);
+
+                renderScene();
+
+                function renderScene() {
+                    
+                    controls.update()
+
+                    requestAnimationFrame(renderScene);
+
+                    renderer.render(scene, camera);
+
+                }
+            }
+            window.onload = init;
+        </script>
+    </body>
+</html>

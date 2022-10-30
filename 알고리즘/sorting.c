@@ -41,6 +41,7 @@ void readFile()
             count++;
         }
     } while (c != EOF); //','의 갯수 +1을 통해 정수의 갯수 확인
+    printf("%d", count);
 
     array = (int *)malloc(count * sizeof(int)); //파일 안의 정수 갯수만큼 배열 생성
 

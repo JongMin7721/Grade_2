@@ -30,41 +30,8 @@
                 renderer.setSize(window.innerWidth, window.innerHeight);
             }
 
-            var controls = new function () {
-                this.rotationSpeed = 0.02;
-                this.bouncingSpeed = 0.02;
-                this.settingposition_x = 0;
-                this.settingposition_y = 0;
-                this.settingposition_z = 0;
-                this.setposition_x = -40;
-                this.setposition_y = 40;
-                this.setposition_z = 30;
-            }
-
-            var gui = new dat.GUI();
-            gui.add(controls, 'rotationSpeed', 0, 0.1);
-            gui.add(controls, 'bouncingSpeed', 0, 0.1);
-            gui.add(controls, 'settingposition_x', -20, 20);
-            gui.add(controls, 'settingposition_y', -20, 20);
-            gui.add(controls, 'settingposition_z', -20, 20);
-            gui.add(controls, 'setposition_x', -100, 100);
-            gui.add(controls, 'setposition_y', -100, 100);
-            gui.add(controls, 'setposition_z', -100, 100);
-
-            function initStats() {
-                var stats = new Stats();
-                stats.setMode(0);
-                stats.domElement.style.position = 'absolute';
-                stats.domElement.style.left = '0px';
-                stats.domElement.style.top = '0px';
-                document
-                    .getElementById("stats-output")
-                    .appendChild(stats.domElement);
-                return stats;
-            }
 
             function init() {
-                var stats = initStats();
 
                 // create a scene, that will hold all our elements such as objects, cameras and
                 // lights.
@@ -109,23 +76,7 @@
                 // add the cube to the scene
                 scene.add(cube);
 
-                var cubeGeometry2 = new THREE.BoxGeometry(3, 3, 3);
-                var cubeMaterial2 = new THREE.MeshLambertMaterial({color: 0xFF0000});
-                var cube2 = new THREE.Mesh(cubeGeometry2, cubeMaterial2);
 
-                cube.castShadow = true;
-                // position the cube
-                cube
-                    .position
-                    .set(10, 10, 10);
-
-                // add the cube to the scene
-                scene.add(cube2);
-
-                var sphereGeometry = new THREE.SphereGeometry(4, 20, 20);
-                var sphereMaterial = new THREE.MeshLambertMaterial({color: 0xFF0000});
-                var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-                scene.add(sphere);
 
                 // position and point the camera to the center of the scene
                 camera
@@ -141,34 +92,6 @@
                 // render the scene
                 renderScene();
                 function renderScene() {
-                    stats.update();
-                    cube.rotation.x += controls.rotationSpeed*5;
-                    //cube.rotation.y += controls.rotationSpeed;
-                    //cube.rotation.z += controls.rotationSpeed*2;
-                    axes.rotation.x += controls.rotationSpeed*5;
-                    //axes.rotation.y += controls.rotationSpeed;
-                    //axes.rotation.z += controls.rotationSpeed*2;
-
-                    camera.position.x = controls.setposition_x;
-                    camera.position.y = controls.setposition_y;
-                    camera.position.z = controls.setposition_z;
-
-
-
-                    cube.position.x = controls.settingposition_x;
-                    axes.position.x = controls.settingposition_x;
-                    cube.position.y = controls.settingposition_y;
-                    axes.position.y = controls.settingposition_y;
-                    cube.position.z = controls.settingposition_z;
-                    axes.position.z = controls.settingposition_z;
-                    
-                    
-                    
-
-                    step += controls.bouncingSpeed;
-                    sphere.position.x = 20 + (10 * (Math.cos(step)));
-                    sphere.position.y = 2 + (10 * Math.abs(Math.sin(step)));
-
                     requestAnimationFrame(renderScene);
                     renderer.render(scene, camera);
                 }
