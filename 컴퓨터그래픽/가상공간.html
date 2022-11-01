@@ -34,6 +34,7 @@
                 renderer.setClearColor(new THREE.Color(0x000000));
                 renderer.setSize(window.innerWidth, window.innerHeight);
                 renderer.shadowMap.enabled = true;
+                renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
                 //화면 마우스로 회전시키기
                 const controls = new THREE.OrbitControls(camera, renderer.domElement);
