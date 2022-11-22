@@ -114,8 +114,12 @@
             light1.shodowCameraBottom = 15;
             light1.castShadow = true;
             celling.add(light1);
-            light2 = new THREE.AmbientLight(0xffffff,0.04);
+
+            light2 = new THREE.AmbientLight(0xffffff,0.05);
             celling.add(light2);
+
+            light3 = new THREE.HemisphereLight(0xffffff,0x333333,0.3);
+            celling.add(light3);
 
             //책장 밑 1
             shellMaping = loader.load("shell.jpeg");
@@ -682,7 +686,7 @@
             }
 
             for (var step = 0; step < 10; step++) {
-                book2 = new THREE.Mesh(b2geometry, book3MapMaterial);
+                book2 = new THREE.Mesh(b2geometry, book4MapMaterial);
                 book2.position.set(-2, 4, 8.5 - (step * 1.1));
                 book2.castShadow = true;
                 book2.receiveShadow = true;
