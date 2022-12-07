@@ -51,15 +51,42 @@
             const room = new THREE.Object3D();
             scene.add(room);
 
-            //바닥
+            //방 1바닥
             const pgeometry = new THREE.PlaneGeometry(100, 100);
+            const rgeometry = new THREE.PlaneGeometry(70, 200);
             const pmaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
-            const plane = new THREE.Mesh(pgeometry, pmaterial);
+            plane = new THREE.Mesh(pgeometry, pmaterial);
             plane.rotation.x = 1.5 * Math.PI
-            plane.position.set(0, 0, 0)
             plane.receiveShadow = true;
             room.add(plane);
+            
+            //방2 바닥
+            road = new THREE.Mesh(rgeometry,pmaterial);
+            road.position.set(85,0,0);
+            road.receiveShadow = true;
+            plane.add(road);
 
+            //복도
+            road2 = new THREE.Mesh(rgeometry, pmaterial);
+            road2.rotation.x = Math.PI;
+            road2.receiveShadow = true;
+            road2.position.set(85,0,60);
+            plane.add(road2);
+
+            //복도 천장
+            const sphgeo1 = new THREE.SphereGeometry(2, 20);
+            const sphmat1 = new THREE.MeshBasicMaterial({ color: 0xcccc00 });
+            light_Sphere1 = new THREE.Mesh(sphgeo1, sphmat1);
+            light_Sphere1.position.set(0, 0, .5);
+            road2.add(light_Sphere1);
+            light1 = new THREE.PointLight(0xffffff, 0.7);
+            light1.position.set(0, 0, 5);
+            light1.shodowCameraLeft = 15;
+            light1.shodowCameraRight = 15;
+            light1.shodowCameraTop = 15;
+            light1.shodowCameraBottom = 15;
+            light1.castShadow = true;
+            road2.add(light1);
 
             //벽
             wallmaping = loader.load("wall.jpeg");
@@ -76,57 +103,54 @@
                 normalmap: doormaping,
                 displacementMap: doormaping,
                 displacementScale: 0.2,
-                displacementBias: -0.15,
-                side: THREE.DoubleSide,
-                transparent: true
+                displacementBias: -0.15
 
             })
             const pgeometry2 = new THREE.PlaneGeometry(100, 60);
-            const pgeometry3 = new THREE.PlaneGeometry(70, 60);
-            const pgeometry31 = new THREE.PlaneGeometry(5, 60);
-            const pgeometry4 = new THREE.PlaneGeometry(25, 10);
-            const dgeometry = new THREE.PlaneGeometry(25, 50);
-            const wall1 = new THREE.Mesh(pgeometry2, wallmapingMaterial);
+            const dgeometry = new THREE.BoxGeometry(25, 50, 1);
+            const wallcub1 = new THREE.BoxGeometry(1, 122, 60);
+            const wallcub2 = new THREE.BoxGeometry(1, 53, 60);
+            const wallcub3 = new THREE.BoxGeometry(1, 25, 10);
+            wall1 = new THREE.Mesh(pgeometry2, wallmapingMaterial);
             wall1.rotation.x = 1.5 * Math.PI;
             wall1.position.set(0, -50, 30)
             wall1.receiveShadow = true;
             plane.add(wall1);
 
-            const wall2 = new THREE.Mesh(pgeometry3, wallmapingMaterial);
-            wall2.rotation.y = 1.5 * Math.PI;
-            wall2.rotation.z = -1.5 * Math.PI;
-            wall2.position.set(50, 15, 30)
+            wall2 = new THREE.Mesh(wallcub1, wallmapingMaterial);
             wall2.receiveShadow = true;
+            wall2.castShadow = true;
+            wall2.position.set(50.5,39,30);
             plane.add(wall2);
 
-            const wall23 = new THREE.Mesh(pgeometry31, wallmapingMaterial);
-            wall23.rotation.y = 1.5 * Math.PI;
-            wall23.rotation.z = -1.5 * Math.PI;
-            wall23.position.set(50, -47.5, 30)
-            wall23.receiveShadow = true;
-            plane.add(wall23);
-
-            const wall21 = new THREE.Mesh(pgeometry4, wallmapingMaterial);
-            wall21.rotation.y = 1.5 * Math.PI;
-            wall21.rotation.z = -1.5 * Math.PI;
-            wall21.position.set(50, -32.5, 55)
+            wall21 = new THREE.Mesh(wallcub2, wallmapingMaterial);
             wall21.receiveShadow = true;
+            wall21.castShadow = true;
+            wall21.position.set(50.5, -73.5, 30);
             plane.add(wall21);
 
-            const wall22 = new THREE.Mesh(dgeometry, doormapmat);
-            wall22.rotation.y = 1.5 * Math.PI;
-            wall22.rotation.z = -1.5 * Math.PI;
-            wall22.position.set(50, -32.5, 25)
+            wall22 = new THREE.Mesh(wallcub3, wallmapingMaterial);
             wall22.receiveShadow = true;
+            wall22.castShadow = true;
+            wall22.position.set(50.5, -34.5, 55);
             plane.add(wall22);
+            
+            
+            door = new THREE.Mesh(dgeometry, doormapmat);
+            door.rotation.y = 1.5 * Math.PI;
+            door.rotation.z = -1.5 * Math.PI;
+            door.receiveShadow = true;
+            door.castShadow = true;
+            door.position.set(50.5, -34.5, 25);
+            plane.add(door);
 
-            const wall3 = new THREE.Mesh(pgeometry2, wallmapingMaterial);
+            wall3 = new THREE.Mesh(pgeometry2, wallmapingMaterial);
             wall3.rotation.x = -1.5 * Math.PI;
             wall3.position.set(0, 50, 30)
             wall3.receiveShadow = true;
             plane.add(wall3);
 
-            const wall4 = new THREE.Mesh(pgeometry2, wallmapingMaterial);
+            wall4 = new THREE.Mesh(pgeometry2, wallmapingMaterial);
             wall4.rotation.y = -1.5 * Math.PI;
             wall4.rotation.z = 1.5 * Math.PI;
             wall4.position.set(-50, 0, 30)
@@ -135,7 +159,7 @@
 
             //천장
             const cellgeometry = new THREE.PlaneGeometry(150, 150);
-            const celling = new THREE.Mesh(pgeometry, wallmapingMaterial);
+            celling = new THREE.Mesh(pgeometry, wallmapingMaterial);
             celling.rotation.y = 3 * Math.PI;
             celling.position.set(0, 0, 60)
             celling.receiveShadow = true;
@@ -144,7 +168,7 @@
             //전구
             const sphgeo = new THREE.SphereGeometry(2, 20);
             const sphmat = new THREE.MeshBasicMaterial({ color: 0xcccc00 });
-            const light_Sphere1 = new THREE.Mesh(sphgeo, sphmat);
+            light_Sphere1 = new THREE.Mesh(sphgeo, sphmat);
             light_Sphere1.position.set(0, 0, .5);
             celling.add(light_Sphere1);
             light1 = new THREE.PointLight(0xffffff, 0.7);
@@ -156,7 +180,7 @@
             light1.castShadow = true;
             //celling.add(light1);
 
-            light2 = new THREE.AmbientLight(0xffffff, 0.5);
+            light2 = new THREE.AmbientLight(0x000000, 0.2);
             celling.add(light2);
 
             light3 = new THREE.HemisphereLight(0xaaaaaa, 0x222222, 0.3);
@@ -788,6 +812,652 @@
             tri2.castShadow = true;
             tri2.receiveShadow = true;
             plane.add(tri2)
+
+            for (var step = 0; step < 10; step++) {
+                book2 = new THREE.Mesh(b4geometry, book4MapMaterial);
+                book2.position.set(3.5, 1.25 + (step * 1.5 * 1.05), 5.5);
+                book2.rotation.x = -1.5 * Math.PI
+                book2.castShadow = true;
+                book2.receiveShadow = true;
+                tri1.add(book2);
+            }
+
+            plane2 = new THREE.Mesh(pgeometry, pmaterial);
+            plane2.rotation.x = 1.5 * Math.PI
+            plane2.rotation.z = 1 * Math.PI
+            plane2.position.set(170, 0, 0)
+            plane2.receiveShadow = true;
+            room.add(plane2);
+
+            //벽
+            wall1 = new THREE.Mesh(pgeometry2, wallmapingMaterial);
+            wall1.rotation.x = 1.5 * Math.PI;
+            wall1.position.set(0, -50, 30)
+            wall1.receiveShadow = true;
+            plane2.add(wall1);
+
+            wall2 = new THREE.Mesh(wallcub1, wallmapingMaterial);
+            wall2.receiveShadow = true;
+            wall2.castShadow = true;
+            wall2.position.set(50.5, 39, 30);
+            plane2.add(wall2);
+
+            wall21 = new THREE.Mesh(wallcub2, wallmapingMaterial);
+            wall21.receiveShadow = true;
+            wall21.castShadow = true;
+            wall21.position.set(50.5, -73.5, 30);
+            plane2.add(wall21);
+
+            wall22 = new THREE.Mesh(wallcub3, wallmapingMaterial);
+            wall22.receiveShadow = true;
+            wall22.castShadow = true;
+            wall22.position.set(50.5, -34.5, 55);
+            plane2.add(wall22);
+
+
+            door = new THREE.Mesh(dgeometry, doormapmat);
+            door.rotation.y = 1.5 * Math.PI;
+            door.rotation.z = -1.5 * Math.PI;
+            door.receiveShadow = true;
+            door.castShadow = true;
+            door.position.set(50.5, -34.5, 25);
+            plane2.add(door);
+
+            wall3 = new THREE.Mesh(pgeometry2, wallmapingMaterial);
+            wall3.rotation.x = -1.5 * Math.PI;
+            wall3.position.set(0, 50, 30)
+            wall3.receiveShadow = true;
+            plane2.add(wall3);
+
+            wall4 = new THREE.Mesh(pgeometry2, wallmapingMaterial);
+            wall4.rotation.y = -1.5 * Math.PI;
+            wall4.rotation.z = 1.5 * Math.PI;
+            wall4.position.set(-50, 0, 30)
+            wall4.receiveShadow = true;
+            plane2.add(wall4);
+
+            //천장
+            celling = new THREE.Mesh(pgeometry, wallmapingMaterial);
+            celling.rotation.y = 3 * Math.PI;
+            celling.position.set(0, 0, 60)
+            celling.receiveShadow = true;
+            plane2.add(celling);
+
+            //전구
+            light_Sphere1 = new THREE.Mesh(sphgeo, sphmat);
+            light_Sphere1.position.set(0, 0, .5);
+            celling.add(light_Sphere1);
+            light1 = new THREE.PointLight(0xffffff, 0.7);
+            light1.position.set(0, 0, 5);
+            light1.shodowCameraLeft = 15;
+            light1.shodowCameraRight = 15;
+            light1.shodowCameraTop = 15;
+            light1.shodowCameraBottom = 15;
+            light1.castShadow = true;
+            //celling.add(light1);
+
+            //책장 밑 1
+
+            bookshelf = new THREE.Mesh(cgeometry2, shelfMapMaterial);
+            bookshelf.position.set(44, 39, 1);
+            bookshelf.rotation.x = -1.5 * Math.PI
+            bookshelf.castShadow = true;
+            bookshelf.receiveShadow = true;
+            plane2.add(bookshelf);
+
+            //책장 뒷면
+            cube = new THREE.Mesh(cgeometry1, shelfMapMaterial);
+            cube.position.set(4.5, 14, 0);
+            cube.castShadow = true;
+            cube.receiveShadow = true;
+            bookshelf.add(cube);
+            //선반1
+            cube3 = new THREE.Mesh(cgeometry2, shelfMapMaterial);
+            cube3.position.set(0, 10, 0);
+            cube3.castShadow = true;
+            cube3.receiveShadow = true;
+            bookshelf.add(cube3);
+            //선반2
+            cube6 = new THREE.Mesh(cgeometry2, shelfMapMaterial);
+            cube6.position.set(0, 20, 0);
+            cube6.castShadow = true;
+            cube6.receiveShadow = true;
+            bookshelf.add(cube6);
+            //책장 천장
+            cube7 = new THREE.Mesh(cgeometry2, shelfMapMaterial);
+            cube7.position.set(0, 29, 0);
+            cube7.castShadow = true;
+            cube7.receiveShadow = true;
+            bookshelf.add(cube7);
+            //책장 옆면1
+            cgeometry3 = new THREE.BoxGeometry(10, 30, 1);
+            cube4 = new THREE.Mesh(cgeometry3, shelfMapMaterial);
+            cube4.position.set(0, 14, 9.5);
+            cube4.castShadow = true;
+            cube4.receiveShadow = true;
+            bookshelf.add(cube4);
+
+            //책장 옆면2
+            cube5 = new THREE.Mesh(cgeometry3, shelfMapMaterial);
+            cube5.position.set(0, 14, -9.5);
+            cube5.castShadow = true;
+            cube5.receiveShadow = true;
+            bookshelf.add(cube5);
+
+            //책1
+            book = new THREE.Mesh(bgeometry, bmaterial);
+            book.position.set(-2, 14, -8);
+            book.rotation.x = 72;
+            book.castShadow = true;
+            book.receiveShadow = true;
+            bookshelf.add(book);
+
+            //책2
+            for (var step = 0; step < 10; step++) {
+                book2 = new THREE.Mesh(b2geometry, book1MapMaterial);
+                book2.position.set(-2, 24, 8.5 - (step * 1.1));
+                book2.castShadow = true;
+                book2.receiveShadow = true;
+                bookshelf.add(book2);
+            }
+
+            //책장 밑 2
+
+            bookshelf = new THREE.Mesh(cgeometry2, shelfMapMaterial);
+            bookshelf.position.set(44, 18, 1);
+            bookshelf.rotation.x = -1.5 * Math.PI
+            bookshelf.castShadow = true;
+            bookshelf.receiveShadow = true;
+            plane2.add(bookshelf);
+
+            //책장 뒷면
+            cube = new THREE.Mesh(cgeometry1, shelfMapMaterial);
+            cube.position.set(4.5, 14, 0);
+            cube.castShadow = true;
+            cube.receiveShadow = true;
+            bookshelf.add(cube);
+            //선반1
+            cube3 = new THREE.Mesh(cgeometry2, shelfMapMaterial);
+            cube3.position.set(0, 10, 0);
+            cube3.castShadow = true;
+            cube3.receiveShadow = true;
+            bookshelf.add(cube3);
+            //선반2
+            cube6 = new THREE.Mesh(cgeometry2, shelfMapMaterial);
+            cube6.position.set(0, 20, 0);
+            cube6.castShadow = true;
+            cube6.receiveShadow = true;
+            bookshelf.add(cube6);
+            //책장 천장
+            cube7 = new THREE.Mesh(cgeometry2, shelfMapMaterial);
+            cube7.position.set(0, 29, 0);
+            cube7.castShadow = true;
+            cube7.receiveShadow = true;
+            bookshelf.add(cube7);
+            //책장 옆면1
+            cube4 = new THREE.Mesh(cgeometry3, shelfMapMaterial);
+            cube4.position.set(0, 14, 9.5);
+            cube4.castShadow = true;
+            cube4.receiveShadow = true;
+            bookshelf.add(cube4);
+
+            //책장 옆면2
+            cube5 = new THREE.Mesh(cgeometry3, shelfMapMaterial);
+            cube5.position.set(0, 14, -9.5);
+            cube5.castShadow = true;
+            cube5.receiveShadow = true;
+            bookshelf.add(cube5);
+
+            //책1
+            for (var step = 0; step < 20; step++) {
+                book = new THREE.Mesh(bgeometry, book2MapMaterial);
+                book.position.set(-2, 14 - step * 0.055, -8 + step * 0.6);
+                book.rotation.x = 72 - step * 0.03;
+                book.castShadow = true;
+                book.receiveShadow = true;
+                bookshelf.add(book);
+            }
+
+            //책2
+            book2 = new THREE.Mesh(b2geometry, b2material);
+            book2.position.set(-2, 24, 8.5);
+            book2.castShadow = true;
+            book2.receiveShadow = true;
+            bookshelf.add(book2);
+
+            //책3
+            book3 = new THREE.Mesh(b2geometry, b3material);
+            book3.position.set(-2, 23.5, 5.4);
+            book3.rotation.x = 7;
+            book3.castShadow = true;
+            book3.receiveShadow = true;
+            bookshelf.add(book3);
+
+
+
+
+            //책장 밑 3
+
+            bookshelf = new THREE.Mesh(cgeometry2, shelfMapMaterial);
+            bookshelf.position.set(44, -3, 1);
+            bookshelf.rotation.x = -1.5 * Math.PI
+            bookshelf.castShadow = true;
+            bookshelf.receiveShadow = true;
+            plane2.add(bookshelf);
+
+            //책장 뒷면
+            cube = new THREE.Mesh(cgeometry1, shelfMapMaterial);
+            cube.position.set(4.5, 14, 0);
+            cube.castShadow = true;
+            cube.receiveShadow = true;
+            bookshelf.add(cube);
+            //선반1
+            cube3 = new THREE.Mesh(cgeometry2, shelfMapMaterial);
+            cube3.position.set(0, 10, 0);
+            cube3.castShadow = true;
+            cube3.receiveShadow = true;
+            bookshelf.add(cube3);
+            //선반2
+            cube6 = new THREE.Mesh(cgeometry2, shelfMapMaterial);
+            cube6.position.set(0, 20, 0);
+            cube6.castShadow = true;
+            cube6.receiveShadow = true;
+            bookshelf.add(cube6);
+            //책장 천장
+            cube7 = new THREE.Mesh(cgeometry2, shelfMapMaterial);
+            cube7.position.set(0, 29, 0);
+            cube7.castShadow = true;
+            cube7.receiveShadow = true;
+            bookshelf.add(cube7);
+            //책장 옆면1
+            cube4 = new THREE.Mesh(cgeometry3, shelfMapMaterial);
+            cube4.position.set(0, 14, 9.5);
+            cube4.castShadow = true;
+            cube4.receiveShadow = true;
+            bookshelf.add(cube4);
+
+            //책장 옆면2
+            cube5 = new THREE.Mesh(cgeometry3, shelfMapMaterial);
+            cube5.position.set(0, 14, -9.5);
+            cube5.castShadow = true;
+            cube5.receiveShadow = true;
+            bookshelf.add(cube5);
+
+            //책1
+            book = new THREE.Mesh(bgeometry, bmaterial);
+            book.position.set(-2, 14, -8);
+            book.rotation.x = 72;
+            book.castShadow = true;
+            book.receiveShadow = true;
+            bookshelf.add(book);
+
+            //책2
+            book2 = new THREE.Mesh(b2geometry, b2material);
+            book2.position.set(-2, 24, 8.5);
+            book2.castShadow = true;
+            book2.receiveShadow = true;
+            bookshelf.add(book2);
+
+            //책3
+            book4 = new THREE.Mesh(b3geometry, b3material);
+            book4.position.set(-3, 21.25, -3);
+            book4.castShadow = true;
+            book4.receiveShadow = true;
+            bookshelf.add(book4);
+
+            //책4
+            book4 = new THREE.Mesh(b3geometry, b3material);
+            book4.position.set(-3, 22.85, -3);
+            book4.castShadow = true;
+            book4.receiveShadow = true;
+            bookshelf.add(book4);
+
+            //책장 밑 4
+
+
+            bookshelf = new THREE.Mesh(cgeometry2, shelfMapMaterial);
+            bookshelf.position.set(-15, 39, 1);
+            bookshelf.rotation.x = -1.5 * Math.PI
+            bookshelf.rotation.y = -3 * Math.PI
+            bookshelf.castShadow = true;
+            bookshelf.receiveShadow = true;
+            plane2.add(bookshelf);
+
+            //책장 뒷면
+            cube = new THREE.Mesh(cgeometry1, shelfMapMaterial);
+            cube.position.set(4.5, 14, 0);
+            cube.castShadow = true;
+            cube.receiveShadow = true;
+            bookshelf.add(cube);
+            //선반1
+            cube3 = new THREE.Mesh(cgeometry2, shelfMapMaterial);
+            cube3.position.set(0, 10, 0);
+            cube3.castShadow = true;
+            cube3.receiveShadow = true;
+            bookshelf.add(cube3);
+            //선반2
+            cube6 = new THREE.Mesh(cgeometry2, shelfMapMaterial);
+            cube6.position.set(0, 20, 0);
+            cube6.castShadow = true;
+            cube6.receiveShadow = true;
+            bookshelf.add(cube6);
+            //책장 천장
+            cube7 = new THREE.Mesh(cgeometry2, shelfMapMaterial);
+            cube7.position.set(0, 29, 0);
+            cube7.castShadow = true;
+            cube7.receiveShadow = true;
+            bookshelf.add(cube7);
+            //책장 옆면1
+            cube4 = new THREE.Mesh(cgeometry3, shelfMapMaterial);
+            cube4.position.set(0, 14, 9.5);
+            cube4.castShadow = true;
+            cube4.receiveShadow = true;
+            bookshelf.add(cube4);
+
+            //책장 옆면2
+            cube5 = new THREE.Mesh(cgeometry3, shelfMapMaterial);
+            cube5.position.set(0, 14, -9.5);
+            cube5.castShadow = true;
+            cube5.receiveShadow = true;
+            bookshelf.add(cube5);
+
+
+
+            //책1
+            book = new THREE.Mesh(bgeometry, bmaterial);
+            book.position.set(-2, 14, -8);
+            book.rotation.x = 72;
+            book.castShadow = true;
+            book.receiveShadow = true;
+            bookshelf.add(book);
+
+            //책2
+            for (var step = 0; step < 10; step++) {
+                book2 = new THREE.Mesh(b2geometry, book1MapMaterial);
+                book2.position.set(-2, 24, 8.5 - (step * 1.1));
+                book2.castShadow = true;
+                book2.receiveShadow = true;
+                bookshelf.add(book2);
+            }
+
+
+
+            //책장 밑 5
+
+            bookshelf = new THREE.Mesh(cgeometry2, shelfMapMaterial);
+            bookshelf.position.set(-15, 18, 1);
+            bookshelf.rotation.x = -1.5 * Math.PI
+            bookshelf.rotation.y = -3 * Math.PI
+            bookshelf.castShadow = true;
+            bookshelf.receiveShadow = true;
+            plane2.add(bookshelf);
+
+            //책장 뒷면
+            cube = new THREE.Mesh(cgeometry1, shelfMapMaterial);
+            cube.position.set(4.5, 14, 0);
+            cube.castShadow = true;
+            cube.receiveShadow = true;
+            bookshelf.add(cube);
+            //선반1
+            cube3 = new THREE.Mesh(cgeometry2, shelfMapMaterial);
+            cube3.position.set(0, 10, 0);
+            cube3.castShadow = true;
+            cube3.receiveShadow = true;
+            bookshelf.add(cube3);
+            //선반2
+            cube6 = new THREE.Mesh(cgeometry2, shelfMapMaterial);
+            cube6.position.set(0, 20, 0);
+            cube6.castShadow = true;
+            cube6.receiveShadow = true;
+            bookshelf.add(cube6);
+            //책장 천장
+            cube7 = new THREE.Mesh(cgeometry2, shelfMapMaterial);
+            cube7.position.set(0, 29, 0);
+            cube7.castShadow = true;
+            cube7.receiveShadow = true;
+            bookshelf.add(cube7);
+            //책장 옆면1
+            cube4 = new THREE.Mesh(cgeometry3, shelfMapMaterial);
+            cube4.position.set(0, 14, 9.5);
+            cube4.castShadow = true;
+            cube4.receiveShadow = true;
+            bookshelf.add(cube4);
+
+            //책장 옆면2
+            cube5 = new THREE.Mesh(cgeometry3, shelfMapMaterial);
+            cube5.position.set(0, 14, -9.5);
+            cube5.castShadow = true;
+            cube5.receiveShadow = true;
+            bookshelf.add(cube5);
+
+            //책1
+            for (var step = 0; step < 20; step++) {
+                book = new THREE.Mesh(bgeometry, book2MapMaterial);
+                book.position.set(-2, 14 - step * 0.055, -8 + step * 0.6);
+                book.rotation.x = 72 - step * 0.03;
+                book.castShadow = true;
+                book.receiveShadow = true;
+                bookshelf.add(book);
+            }
+
+            //책2
+            book2 = new THREE.Mesh(b2geometry, b2material);
+            book2.position.set(-2, 24, 8.5);
+            book2.castShadow = true;
+            book2.receiveShadow = true;
+            bookshelf.add(book2);
+
+            //책3
+            book3 = new THREE.Mesh(b2geometry, b3material);
+            book3.position.set(-2, 23.5, 5.4);
+            book3.rotation.x = 7;
+            book3.castShadow = true;
+            book3.receiveShadow = true;
+            bookshelf.add(book3);
+
+
+
+
+            //책장 밑 6
+
+            bookshelf = new THREE.Mesh(cgeometry2, shelfMapMaterial);
+            bookshelf.position.set(-15, -3, 1);
+            bookshelf.rotation.x = -1.5 * Math.PI
+            bookshelf.rotation.y = -3 * Math.PI
+            bookshelf.castShadow = true;
+            bookshelf.receiveShadow = true;
+            plane2.add(bookshelf);
+
+            //책장 뒷면
+            cube = new THREE.Mesh(cgeometry1, shelfMapMaterial);
+            cube.position.set(4.5, 14, 0);
+            cube.castShadow = true;
+            cube.receiveShadow = true;
+            bookshelf.add(cube);
+            //선반1
+            cube3 = new THREE.Mesh(cgeometry2, shelfMapMaterial);
+            cube3.position.set(0, 10, 0);
+            cube3.castShadow = true;
+            cube3.receiveShadow = true;
+            bookshelf.add(cube3);
+            //선반2
+            cube6 = new THREE.Mesh(cgeometry2, shelfMapMaterial);
+            cube6.position.set(0, 20, 0);
+            cube6.castShadow = true;
+            cube6.receiveShadow = true;
+            bookshelf.add(cube6);
+            //책장 천장
+            cube7 = new THREE.Mesh(cgeometry2, shelfMapMaterial);
+            cube7.position.set(0, 29, 0);
+            cube7.castShadow = true;
+            cube7.receiveShadow = true;
+            bookshelf.add(cube7);
+            //책장 옆면1
+            cube4 = new THREE.Mesh(cgeometry3, shelfMapMaterial);
+            cube4.position.set(0, 14, 9.5);
+            cube4.castShadow = true;
+            cube4.receiveShadow = true;
+            bookshelf.add(cube4);
+
+            //책장 옆면2
+            cube5 = new THREE.Mesh(cgeometry3, shelfMapMaterial);
+            cube5.position.set(0, 14, -9.5);
+            cube5.castShadow = true;
+            cube5.receiveShadow = true;
+            bookshelf.add(cube5);
+
+            //책1
+            book = new THREE.Mesh(bgeometry, bmaterial);
+            book.position.set(-2, 14, -8);
+            book.rotation.x = 72;
+            book.castShadow = true;
+            book.receiveShadow = true;
+            bookshelf.add(book);
+
+            //책2
+            book2 = new THREE.Mesh(b2geometry, b2material);
+            book2.position.set(-2, 24, 8.5);
+            book2.castShadow = true;
+            book2.receiveShadow = true;
+            bookshelf.add(book2);
+
+            //책3
+            book4 = new THREE.Mesh(b3geometry, b3material);
+            book4.position.set(0, 21.25, -6);
+            book4.castShadow = true;
+            book4.receiveShadow = true;
+            bookshelf.add(book4);
+
+
+            //책장 밑 7            
+
+            bookshelf = new THREE.Mesh(cgeometry2, shelfMapMaterial);
+            bookshelf.position.set(-31, 44, 1);
+            bookshelf.rotation.x = -1.5 * Math.PI
+            bookshelf.rotation.y = -1.5 * Math.PI
+            bookshelf.castShadow = true;
+            bookshelf.receiveShadow = true;
+            plane2.add(bookshelf);
+
+            //책장 뒷면
+            cube = new THREE.Mesh(cgeometry1, shelfMapMaterial);
+            cube.position.set(4.5, 14, 0);
+            cube.castShadow = true;
+            cube.receiveShadow = true;
+            bookshelf.add(cube);
+            //선반1
+            cube3 = new THREE.Mesh(cgeometry2, shelfMapMaterial);
+            cube3.position.set(0, 10, 0);
+            cube3.castShadow = true;
+            cube3.receiveShadow = true;
+            bookshelf.add(cube3);
+            //선반2
+            cube6 = new THREE.Mesh(cgeometry2, shelfMapMaterial);
+            cube6.position.set(0, 20, 0);
+            cube6.castShadow = true;
+            cube6.receiveShadow = true;
+            bookshelf.add(cube6);
+            //책장 천장
+            cube7 = new THREE.Mesh(cgeometry2, shelfMapMaterial);
+            cube7.position.set(0, 29, 0);
+            cube7.castShadow = true;
+            cube7.receiveShadow = true;
+            bookshelf.add(cube7);
+            //책장 옆면1
+            cube4 = new THREE.Mesh(cgeometry3, shelfMapMaterial);
+            cube4.position.set(0, 14, 9.5);
+            cube4.castShadow = true;
+            cube4.receiveShadow = true;
+            bookshelf.add(cube4);
+
+            //책장 옆면2
+            cube5 = new THREE.Mesh(cgeometry3, shelfMapMaterial);
+            cube5.position.set(0, 14, -9.5);
+            cube5.castShadow = true;
+            cube5.receiveShadow = true;
+            bookshelf.add(cube5);
+
+            //책1
+            book = new THREE.Mesh(bgeometry, bmaterial);
+            book.position.set(-2, 14, -8);
+            book.rotation.x = 72;
+            book.castShadow = true;
+            book.receiveShadow = true;
+            bookshelf.add(book);
+
+            //책2
+            for (var step = 0; step < 10; step++) {
+                book2 = new THREE.Mesh(b2geometry, book1MapMaterial);
+                book2.position.set(-2, 24, 8.5 - (step * 1.1));
+                book2.castShadow = true;
+                book2.receiveShadow = true;
+                bookshelf.add(book2);
+            }
+
+            for (var step = 0; step < 10; step++) {
+                book2 = new THREE.Mesh(b2geometry, book4MapMaterial);
+                book2.position.set(-2, 4, 8.5 - (step * 1.1));
+                book2.castShadow = true;
+                book2.receiveShadow = true;
+                bookshelf.add(book2);
+            }
+
+            trimat = new THREE.CylinderGeometry(10, 10, 1, 3, 1, false, 0, 1.6);
+
+            //선반2
+            bookshelf2 = new THREE.Mesh(cgeometry2, shelfMapMaterial);
+            bookshelf2.position.set(0, -45.5, 30);
+            bookshelf2.rotation.x = -1.5 * Math.PI
+            bookshelf2.rotation.y = -1.5 * Math.PI
+            bookshelf2.castShadow = true;
+            bookshelf2.receiveShadow = true;
+            plane2.add(bookshelf2);
+
+            tri1 = new THREE.Mesh(trimat, shelfMapMaterial);
+            tri1.rotation.z = -1.5 * Math.PI
+            tri1.position.set(9.5, -50.5, 30);
+            tri1.castShadow = true;
+            tri1.receiveShadow = true;
+            plane2.add(tri1)
+
+            tri2 = new THREE.Mesh(trimat, shelfMapMaterial);
+            tri2.rotation.z = -1.5 * Math.PI
+            tri2.position.set(-9.5, -50.5, 30);
+            tri2.castShadow = true;
+            tri2.receiveShadow = true;
+            plane2.add(tri2)
+
+            for (var step = 0; step < 10; step++) {
+                book2 = new THREE.Mesh(b4geometry, book4MapMaterial);
+                book2.position.set(3.5, 1.25 + (step * 1.5 * 1.05), 5.5);
+                book2.rotation.x = -1.5 * Math.PI
+                book2.castShadow = true;
+                book2.receiveShadow = true;
+                tri1.add(book2);
+            }
+
+            //선반3
+            bookshelf2 = new THREE.Mesh(cgeometry2, shelfMapMaterial);
+            bookshelf2.position.set(-30, -45.5, 30);
+            bookshelf2.rotation.x = -1.5 * Math.PI
+            bookshelf2.rotation.y = -1.5 * Math.PI
+            bookshelf2.castShadow = true;
+            bookshelf2.receiveShadow = true;
+            plane2.add(bookshelf2);
+
+            tri1 = new THREE.Mesh(trimat, shelfMapMaterial);
+            tri1.rotation.z = -1.5 * Math.PI
+            tri1.position.set(-20.5, -50.5, 30);
+            tri1.castShadow = true;
+            tri1.receiveShadow = true;
+            plane2.add(tri1)
+
+            tri2 = new THREE.Mesh(trimat, shelfMapMaterial);
+            tri2.rotation.z = -1.5 * Math.PI
+            tri2.position.set(-39.5, -50.5, 30);
+            tri2.castShadow = true;
+            tri2.receiveShadow = true;
+            plane2.add(tri2)
 
             for (var step = 0; step < 10; step++) {
                 book2 = new THREE.Mesh(b4geometry, book4MapMaterial);
