@@ -21,7 +21,7 @@
     <script>
 
         function init() {
-            
+
 
             var scene = new THREE.Scene();
             var camera = new THREE.PerspectiveCamera(
@@ -70,19 +70,55 @@
                 displacementScale: 0.2,
                 displacementBias: -0.15
             });
+            doormaping = loader.load("door.jpg");
+            const doormapmat = new THREE.MeshStandardMaterial({
+                map: doormaping,
+                normalmap: doormaping,
+                displacementMap: doormaping,
+                displacementScale: 0.2,
+                displacementBias: -0.15,
+                side: THREE.DoubleSide,
+                transparent: true
+
+            })
             const pgeometry2 = new THREE.PlaneGeometry(100, 60);
+            const pgeometry3 = new THREE.PlaneGeometry(70, 60);
+            const pgeometry31 = new THREE.PlaneGeometry(5, 60);
+            const pgeometry4 = new THREE.PlaneGeometry(25, 10);
+            const dgeometry = new THREE.PlaneGeometry(25, 50);
             const wall1 = new THREE.Mesh(pgeometry2, wallmapingMaterial);
             wall1.rotation.x = 1.5 * Math.PI;
             wall1.position.set(0, -50, 30)
             wall1.receiveShadow = true;
             plane.add(wall1);
 
-            const wall2 = new THREE.Mesh(pgeometry2, wallmapingMaterial);
+            const wall2 = new THREE.Mesh(pgeometry3, wallmapingMaterial);
             wall2.rotation.y = 1.5 * Math.PI;
             wall2.rotation.z = -1.5 * Math.PI;
-            wall2.position.set(50, 0, 30)
+            wall2.position.set(50, 15, 30)
             wall2.receiveShadow = true;
             plane.add(wall2);
+
+            const wall23 = new THREE.Mesh(pgeometry31, wallmapingMaterial);
+            wall23.rotation.y = 1.5 * Math.PI;
+            wall23.rotation.z = -1.5 * Math.PI;
+            wall23.position.set(50, -47.5, 30)
+            wall23.receiveShadow = true;
+            plane.add(wall23);
+
+            const wall21 = new THREE.Mesh(pgeometry4, wallmapingMaterial);
+            wall21.rotation.y = 1.5 * Math.PI;
+            wall21.rotation.z = -1.5 * Math.PI;
+            wall21.position.set(50, -32.5, 55)
+            wall21.receiveShadow = true;
+            plane.add(wall21);
+
+            const wall22 = new THREE.Mesh(dgeometry, doormapmat);
+            wall22.rotation.y = 1.5 * Math.PI;
+            wall22.rotation.z = -1.5 * Math.PI;
+            wall22.position.set(50, -32.5, 25)
+            wall22.receiveShadow = true;
+            plane.add(wall22);
 
             const wall3 = new THREE.Mesh(pgeometry2, wallmapingMaterial);
             wall3.rotation.x = -1.5 * Math.PI;
@@ -97,65 +133,6 @@
             wall4.receiveShadow = true;
             plane.add(wall4);
 
-            //창문
-            winmaping = loader.load("window.jpeg");
-            const windowmat = new THREE.MeshStandardMaterial({
-                map: winmaping
-            })
-            window1 = new THREE.Mesh();
-            window1.position.set(0,0,.2);
-            wall4.add(window1);
-
-            wingeo_v = new THREE.PlaneGeometry(30.5, 1);
-            wingeo_h = new THREE.PlaneGeometry(1, 25.5);
-
-            const window_set = new THREE.Object3D();
-            window1.add(window_set);
-            
-
-            wintop = new THREE.Mesh(wingeo_v,windowmat);
-            wintop.position.set(0,12.5,0);
-            wintop.castShadow = true;
-            window_set.add(wintop);
-
-            winbottom = new THREE.Mesh(wingeo_v,windowmat);
-            winbottom.position.set(0,-12.5,0);
-            winbottom.castShadow = true;
-            window_set.add(winbottom);
-
-            winleft = new THREE.Mesh(wingeo_h, windowmat);
-            winleft.position.set(15, 0, 0);
-            winleft.castShadow = true;
-            window_set.add(winleft);
-
-            winright = new THREE.Mesh(wingeo_h,windowmat);
-            winright.position.set(-15,0,0);
-            winright.castShadow = true;
-            window_set.add(winright)
-
-            winvmid = new THREE.Mesh(wingeo_v, windowmat);
-            winvmid.castShadow = true;
-            window_set.add(winvmid);
-
-            winhmid = new THREE.Mesh(wingeo_h, windowmat)
-            winhmid.castShadow = true;
-            window_set.add(winhmid);
-            
-
-            //하늘
-            skymaping = loader.load("sky.jpeg");
-            const skymat = new THREE.MeshStandardMaterial({
-                map : skymaping,
-                normalmap : skymaping
-            })
-            skygeo = new THREE.PlaneGeometry(30,25);
-            sky1 = new THREE.Mesh(skygeo,skymat);
-            sky1.rotation.z = Math.PI;
-            sky1.position.set(0,0,-.1);
-            window1.add(sky1);
-
-        
-
             //천장
             const cellgeometry = new THREE.PlaneGeometry(150, 150);
             const celling = new THREE.Mesh(pgeometry, wallmapingMaterial);
@@ -164,38 +141,25 @@
             celling.receiveShadow = true;
             plane.add(celling);
 
-            light4 = new THREE.DirectionalLight(0x222222,0.7);
-            light4.castShadow = true;
-            light4.target = window1;
-            light4.position.set(0,-10,-15);
-            window1.add(light4);
-
-            light4.shadow.camera.top = 15;
-            light4.shadow.camera.bottom = -15;
-            light4.shadow.camera.left = -15;
-            light4.shadow.camera.right = 15;
-            light4.shadow.camera.far = 200;
-
-
             //전구
             const sphgeo = new THREE.SphereGeometry(2, 20);
             const sphmat = new THREE.MeshBasicMaterial({ color: 0xcccc00 });
             const light_Sphere1 = new THREE.Mesh(sphgeo, sphmat);
             light_Sphere1.position.set(0, 0, .5);
             celling.add(light_Sphere1);
-            light1 = new THREE.PointLight(0xffffff,0.7);
+            light1 = new THREE.PointLight(0xffffff, 0.7);
             light1.position.set(0, 0, 5);
             light1.shodowCameraLeft = 15;
             light1.shodowCameraRight = 15;
             light1.shodowCameraTop = 15;
             light1.shodowCameraBottom = 15;
             light1.castShadow = true;
-            celling.add(light1);
+            //celling.add(light1);
 
-            light2 = new THREE.AmbientLight(0x000000,0.2);
+            light2 = new THREE.AmbientLight(0xffffff, 0.5);
             celling.add(light2);
 
-            light3 = new THREE.HemisphereLight(0xaaaaaa,0x222222,0.3);
+            light3 = new THREE.HemisphereLight(0xaaaaaa, 0x222222, 0.3);
             celling.add(light3);
 
             //책장 밑 1
@@ -207,7 +171,7 @@
                 displacementScale: 0.2,
                 displacementBias: -0.15,
                 roughnessMap: shellMaping,
-                roughness: 0
+                roughness: .9
             });
             cgeometry1 = new THREE.BoxGeometry(1, 30, 20);
             cgeometry2 = new THREE.BoxGeometry(10, 1, 20);
@@ -319,9 +283,9 @@
             bookshelf.add(book);
 
             //책2
-            for(var step = 0; step < 10; step++){
+            for (var step = 0; step < 10; step++) {
                 book2 = new THREE.Mesh(b2geometry, book1MapMaterial);
-                book2.position.set(-2, 24, 8.5-(step*1.1));
+                book2.position.set(-2, 24, 8.5 - (step * 1.1));
                 book2.castShadow = true;
                 book2.receiveShadow = true;
                 bookshelf.add(book2);
@@ -375,10 +339,10 @@
             bookshelf.add(cube5);
 
             //책1
-            for(var step = 0; step < 20; step++){
+            for (var step = 0; step < 20; step++) {
                 book = new THREE.Mesh(bgeometry, book2MapMaterial);
-                book.position.set(-2, 14-step*0.055, -8 + step*0.6);
-                book.rotation.x = 72-step*0.03;
+                book.position.set(-2, 14 - step * 0.055, -8 + step * 0.6);
+                book.rotation.x = 72 - step * 0.03;
                 book.castShadow = true;
                 book.receiveShadow = true;
                 bookshelf.add(book);
@@ -479,7 +443,7 @@
             bookshelf.add(book4);
 
             //책장 밑 4
-            
+
 
             bookshelf = new THREE.Mesh(cgeometry2, shelfMapMaterial);
             bookshelf.position.set(-15, 39, 1);
@@ -768,39 +732,7 @@
                 bookshelf.add(book2);
             }
 
-            //선반1
-            bookshelf = new THREE.Mesh(cgeometry2, shelfMapMaterial);
-            bookshelf.position.set(30, -45.5, 30);
-            bookshelf.rotation.x = -1.5 * Math.PI
-            bookshelf.rotation.y = -1.5 * Math.PI
-            bookshelf.castShadow = true;
-            bookshelf.receiveShadow = true;
-            plane.add(bookshelf);
-
-
-            trimat = new THREE.CylinderGeometry(10,10,1,3,1,false,0,1.6);
-            tri1 = new THREE.Mesh(trimat,shelfMapMaterial);
-            tri1.rotation.z = -1.5 * Math.PI
-            tri1.position.set(39.5,-50.5,30);
-            tri1.castShadow = true;
-            tri1.receiveShadow = true;
-            plane.add(tri1)
-
-            tri2 = new THREE.Mesh(trimat, shelfMapMaterial);
-            tri2.rotation.z = -1.5 * Math.PI
-            tri2.position.set(20.5, -50.5, 30);
-            tri2.castShadow = true;
-            tri2.receiveShadow = true;
-            plane.add(tri2)
-
-            for (var step = 0; step < 10; step++) {
-                book2 = new THREE.Mesh(b4geometry, book4MapMaterial);
-                book2.position.set(3.5, 1.25+(step*1.5*1.05), 5.5);
-                book2.rotation.x = -1.5 * Math.PI
-                book2.castShadow = true;
-                book2.receiveShadow = true;
-                tri1.add(book2);
-            }
+            trimat = new THREE.CylinderGeometry(10, 10, 1, 3, 1, false, 0, 1.6);
 
             //선반2
             bookshelf2 = new THREE.Mesh(cgeometry2, shelfMapMaterial);
@@ -876,7 +808,7 @@
 
             }
         }
-        
+
         window.onload = init;
         window.addEventListener('resize', onRisize, false);
     </script>
