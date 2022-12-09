@@ -84,10 +84,13 @@
             renderer.setClearColor(new THREE.Color(0x000000));
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.shadowMap.enabled = true;
-            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-            renderer.gammaInput = true;
-            renderer.gammaOutput = true;
 
+            window.addEventListener('resize', onResize, false);
+            function onResize() {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            }
 
             const controls1p = new THREE.PointerLockControls(camera, document.body);
             const blocker = document.getElementById('blocker');
@@ -148,7 +151,6 @@
             wallmaping = loader.load("wall.jpeg");
             const wallmapingMaterial = new THREE.MeshStandardMaterial({
                 map: wallmaping,
-                normalmap: wallmaping,
                 displacementMap: wallmaping,
                 displacementScale: 0.2,
                 displacementBias: -0.15
@@ -156,12 +158,11 @@
             doormaping = loader.load("door.jpg");
             const doormapmat = new THREE.MeshStandardMaterial({
                 map: doormaping,
-                normalmap: doormaping,
                 displacementMap: doormaping,
                 displacementScale: 0.2,
                 displacementBias: -0.15
+            });
 
-            })
             const pgeometry2 = new THREE.PlaneGeometry(100, 60);
             const dgeometry = new THREE.BoxGeometry(25, 50, 1);
             const wallcub1 = new THREE.BoxGeometry(1, 122, 60);
@@ -234,7 +235,7 @@
             light1.shodowCameraTop = 15;
             light1.shodowCameraBottom = 15;
             light1.castShadow = true;
-            //celling.add(light1);
+            celling.add(light1);
 
             light2 = new THREE.AmbientLight(0x000000, 0.2);
             celling.add(light2);
@@ -246,7 +247,6 @@
             shellMaping = loader.load("shell.jpeg");
             shelfMapMaterial = new THREE.MeshStandardMaterial({
                 map: shellMaping,
-                normalmap: shellMaping,
                 displacementMap: shellMaping,
                 displacementScale: 0.2,
                 displacementBias: -0.15,
@@ -306,7 +306,6 @@
             book1Maping = loader.load("book1.jpeg");
             book1MapMaterial = new THREE.MeshStandardMaterial({
                 map: book1Maping,
-                normalmap: book1Maping,
                 displacementMap: book1Maping,
                 displacementScale: 0.2,
                 displacementBias: -0.15,
@@ -317,7 +316,6 @@
             book2Maping = loader.load("book2.jpeg");
             book2MapMaterial = new THREE.MeshStandardMaterial({
                 map: book2Maping,
-                normalmap: book2Maping,
                 displacementMap: book2Maping,
                 displacementScale: 0.2,
                 displacementBias: -0.15,
@@ -328,7 +326,6 @@
             book3Maping = loader.load("book3.jpeg");
             book3MapMaterial = new THREE.MeshStandardMaterial({
                 map: book3Maping,
-                normalmap: book3Maping,
                 displacementMap: book3Maping,
                 displacementScale: 0.2,
                 displacementBias: -0.15,
@@ -338,7 +335,6 @@
             book4Maping = loader.load("book4.jpeg");
             book4MapMaterial = new THREE.MeshStandardMaterial({
                 map: book4Maping,
-                normalmap: book4Maping,
                 displacementMap: book4Maping,
                 displacementScale: 0.2,
                 displacementBias: -0.15,
@@ -363,13 +359,22 @@
             bookshelf.add(book);
 
             //책2
-            for (var step = 0; step < 10; step++) {
+            book2 = new THREE.Mesh(b2geometry, book1MapMaterial);
+            book2.position.set(-2, 24, 8.5);
+            book2.castShadow = true;
+            book2.receiveShadow = true;
+            bookshelf.add(book2);
+            for (var step = 1; step < 9; step++) {
                 book2 = new THREE.Mesh(b2geometry, book1MapMaterial);
                 book2.position.set(-2, 24, 8.5 - (step * 1.1));
-                book2.castShadow = true;
                 book2.receiveShadow = true;
                 bookshelf.add(book2);
             }
+            book2 = new THREE.Mesh(b2geometry, book1MapMaterial);
+            book2.position.set(-2, 24, 8.5 - (9 * 1.1));
+            book2.castShadow = true;
+            book2.receiveShadow = true;
+            bookshelf.add(book2);
 
             //책장 밑 2
 
@@ -419,14 +424,25 @@
             bookshelf.add(cube5);
 
             //책1
-            for (var step = 0; step < 20; step++) {
+            book = new THREE.Mesh(bgeometry, book2MapMaterial);
+            book.position.set(-2, 14, -8);
+            book.rotation.x = 72;
+            book.castShadow = true;
+            book.receiveShadow = true;
+            bookshelf.add(book);
+            for (var step = 1; step < 20; step++) {
                 book = new THREE.Mesh(bgeometry, book2MapMaterial);
                 book.position.set(-2, 14 - step * 0.055, -8 + step * 0.6);
                 book.rotation.x = 72 - step * 0.03;
-                book.castShadow = true;
                 book.receiveShadow = true;
                 bookshelf.add(book);
             }
+            book = new THREE.Mesh(bgeometry, book2MapMaterial);
+            book.position.set(-2, 14 - 19 * 0.055, -8 + 19 * 0.6);
+            book.rotation.x = 72 - 19 * 0.03;
+            book.castShadow = true;
+            book.receiveShadow = true;
+            bookshelf.add(book);
 
             //책2
             book2 = new THREE.Mesh(b2geometry, b2material);
@@ -582,13 +598,22 @@
             bookshelf.add(book);
 
             //책2
-            for (var step = 0; step < 10; step++) {
+            book2 = new THREE.Mesh(b2geometry, book1MapMaterial);
+            book2.position.set(-2, 24, 8.5);
+            book2.castShadow = true;
+            book2.receiveShadow = true;
+            bookshelf.add(book2);
+            for (var step = 1; step < 9; step++) {
                 book2 = new THREE.Mesh(b2geometry, book1MapMaterial);
                 book2.position.set(-2, 24, 8.5 - (step * 1.1));
-                book2.castShadow = true;
                 book2.receiveShadow = true;
                 bookshelf.add(book2);
             }
+            book2 = new THREE.Mesh(b2geometry, book1MapMaterial);
+            book2.position.set(-2, 24, 8.5 - (9 * 1.1));
+            book2.castShadow = true;
+            book2.receiveShadow = true;
+            bookshelf.add(book2);
 
 
 
@@ -641,14 +666,25 @@
             bookshelf.add(cube5);
 
             //책1
-            for (var step = 0; step < 20; step++) {
+            book = new THREE.Mesh(bgeometry, book2MapMaterial);
+            book.position.set(-2, 14, -8);
+            book.rotation.x = 72;
+            book.castShadow = true;
+            book.receiveShadow = true;
+            bookshelf.add(book);
+            for (var step = 1; step < 20; step++) {
                 book = new THREE.Mesh(bgeometry, book2MapMaterial);
                 book.position.set(-2, 14 - step * 0.055, -8 + step * 0.6);
                 book.rotation.x = 72 - step * 0.03;
-                book.castShadow = true;
                 book.receiveShadow = true;
                 bookshelf.add(book);
             }
+            book = new THREE.Mesh(bgeometry, book2MapMaterial);
+            book.position.set(-2, 14 - 19 * 0.055, -8 + 19 * 0.6);
+            book.rotation.x = 72 - 19 * 0.03;
+            book.castShadow = true;
+            book.receiveShadow = true;
+            bookshelf.add(book);
 
             //책2
             book2 = new THREE.Mesh(b2geometry, b2material);
@@ -666,7 +702,25 @@
             bookshelf.add(book3);
 
 
-
+book = new THREE.Mesh(bgeometry, book2MapMaterial);
+            book.position.set(-2, 14, -8);
+            book.rotation.x = 72;
+            book.castShadow = true;
+            book.receiveShadow = true;
+            bookshelf.add(book);
+            for (var step = 1; step < 20; step++) {
+                book = new THREE.Mesh(bgeometry, book2MapMaterial);
+                book.position.set(-2, 14 - step * 0.055, -8 + step * 0.6);
+                book.rotation.x = 72 - step * 0.03;
+                book.receiveShadow = true;
+                bookshelf.add(book);
+            }
+            book = new THREE.Mesh(bgeometry, book2MapMaterial);
+            book.position.set(-2, 14 - 19 * 0.055, -8 + 19 * 0.6);
+            book.rotation.x = 72 - 19 * 0.03;
+            book.castShadow = true;
+            book.receiveShadow = true;
+            bookshelf.add(book);
 
             //책장 밑 6
 
@@ -796,21 +850,39 @@
             bookshelf.add(book);
 
             //책2
-            for (var step = 0; step < 10; step++) {
+            book2 = new THREE.Mesh(b2geometry, book1MapMaterial);
+            book2.position.set(-2, 24, 8.5);
+            book2.castShadow = true;
+            book2.receiveShadow = true;
+            bookshelf.add(book2);
+            for (var step = 1; step < 9; step++) {
                 book2 = new THREE.Mesh(b2geometry, book1MapMaterial);
                 book2.position.set(-2, 24, 8.5 - (step * 1.1));
-                book2.castShadow = true;
                 book2.receiveShadow = true;
                 bookshelf.add(book2);
             }
+            book2 = new THREE.Mesh(b2geometry, book1MapMaterial);
+            book2.position.set(-2, 24, 8.5 - (9 * 1.1));
+            book2.castShadow = true;
+            book2.receiveShadow = true;
+            bookshelf.add(book2);
 
-            for (var step = 0; step < 10; step++) {
-                book2 = new THREE.Mesh(b2geometry, book4MapMaterial);
+            book2 = new THREE.Mesh(b2geometry, book1MapMaterial);
+            book2.position.set(-2, 4, 8.5);
+            book2.castShadow = true;
+            book2.receiveShadow = true;
+            bookshelf.add(book2);
+            for (var step = 1; step < 9; step++) {
+                book2 = new THREE.Mesh(b2geometry, book1MapMaterial);
                 book2.position.set(-2, 4, 8.5 - (step * 1.1));
-                book2.castShadow = true;
                 book2.receiveShadow = true;
                 bookshelf.add(book2);
             }
+            book2 = new THREE.Mesh(b2geometry, book1MapMaterial);
+            book2.position.set(-2, 4, 8.5 - (9 * 1.1));
+            book2.castShadow = true;
+            book2.receiveShadow = true;
+            bookshelf.add(book2);
 
             trimat = new THREE.CylinderGeometry(10, 10, 1, 3, 1, false, 0, 1.6);
 
@@ -837,14 +909,25 @@
             tri2.receiveShadow = true;
             plane.add(tri2)
 
-            for (var step = 0; step < 10; step++) {
+            book2 = new THREE.Mesh(b4geometry, book4MapMaterial);
+            book2.position.set(3.5, 1.25, 5.5);
+            book2.rotation.x = -1.5 * Math.PI
+            book2.castShadow = true;
+            book2.receiveShadow = true;
+            tri1.add(book2);
+            for (var step = 1; step < 9; step++) {
                 book2 = new THREE.Mesh(b4geometry, book4MapMaterial);
                 book2.position.set(3.5, 1.25 + (step * 1.5 * 1.05), 5.5);
                 book2.rotation.x = -1.5 * Math.PI
-                book2.castShadow = true;
                 book2.receiveShadow = true;
                 tri1.add(book2);
             }
+            book2 = new THREE.Mesh(b4geometry, book4MapMaterial);
+            book2.position.set(3.5, 1.25 + (9 * 1.5 * 1.05), 5.5);
+            book2.rotation.x = -1.5 * Math.PI
+            book2.castShadow = true;
+            book2.receiveShadow = true;
+            tri1.add(book2);
 
             //선반3
             bookshelf2 = new THREE.Mesh(cgeometry2, shelfMapMaterial);
@@ -869,14 +952,31 @@
             tri2.receiveShadow = true;
             plane.add(tri2)
 
-            for (var step = 0; step < 10; step++) {
+            book2 = new THREE.Mesh(b4geometry, book4MapMaterial);
+            book2.position.set(3.5, 1.25, 5.5);
+            book2.rotation.x = -1.5 * Math.PI
+            book2.castShadow = true;
+            book2.receiveShadow = true;
+            tri1.add(book2);
+            for (var step = 1; step < 9; step++) {
                 book2 = new THREE.Mesh(b4geometry, book4MapMaterial);
                 book2.position.set(3.5, 1.25 + (step * 1.5 * 1.05), 5.5);
                 book2.rotation.x = -1.5 * Math.PI
-                book2.castShadow = true;
                 book2.receiveShadow = true;
                 tri1.add(book2);
             }
+            book2 = new THREE.Mesh(b4geometry, book4MapMaterial);
+            book2.position.set(3.5, 1.25 + (9 * 1.5 * 1.05), 5.5);
+            book2.rotation.x = -1.5 * Math.PI
+            book2.castShadow = true;
+            book2.receiveShadow = true;
+            tri1.add(book2);
+
+
+
+
+
+
 
             plane2 = new THREE.Mesh(pgeometry, pmaterial);
             plane2.rotation.x = 1.5 * Math.PI
@@ -1009,13 +1109,22 @@
             bookshelf.add(book);
 
             //책2
-            for (var step = 0; step < 10; step++) {
+            book2 = new THREE.Mesh(b2geometry, book1MapMaterial);
+            book2.position.set(-2, 24, 8.5);
+            book2.castShadow = true;
+            book2.receiveShadow = true;
+            bookshelf.add(book2);
+            for (var step = 1; step < 9; step++) {
                 book2 = new THREE.Mesh(b2geometry, book1MapMaterial);
                 book2.position.set(-2, 24, 8.5 - (step * 1.1));
-                book2.castShadow = true;
                 book2.receiveShadow = true;
                 bookshelf.add(book2);
             }
+            book2 = new THREE.Mesh(b2geometry, book1MapMaterial);
+            book2.position.set(-2, 24, 8.5 - (9 * 1.1));
+            book2.castShadow = true;
+            book2.receiveShadow = true;
+            bookshelf.add(book2);
 
             //책장 밑 2
 
@@ -1065,14 +1174,25 @@
             bookshelf.add(cube5);
 
             //책1
-            for (var step = 0; step < 20; step++) {
+            book = new THREE.Mesh(bgeometry, book2MapMaterial);
+            book.position.set(-2, 14, -8);
+            book.rotation.x = 72;
+            book.castShadow = true;
+            book.receiveShadow = true;
+            bookshelf.add(book);
+            for (var step = 1; step < 19; step++) {
                 book = new THREE.Mesh(bgeometry, book2MapMaterial);
                 book.position.set(-2, 14 - step * 0.055, -8 + step * 0.6);
                 book.rotation.x = 72 - step * 0.03;
-                book.castShadow = true;
                 book.receiveShadow = true;
                 bookshelf.add(book);
             }
+            book = new THREE.Mesh(bgeometry, book2MapMaterial);
+            book.position.set(-2, 14 - 19 * 0.055, -8 + 19 * 0.6);
+            book.rotation.x = 72 - 19 * 0.03;
+            book.castShadow = true;
+            book.receiveShadow = true;
+            bookshelf.add(book);
 
             //책2
             book2 = new THREE.Mesh(b2geometry, b2material);
@@ -1228,13 +1348,22 @@
             bookshelf.add(book);
 
             //책2
-            for (var step = 0; step < 10; step++) {
+            book2 = new THREE.Mesh(b2geometry, book1MapMaterial);
+            book2.position.set(-2, 24, 8.5);
+            book2.castShadow = true;
+            book2.receiveShadow = true;
+            bookshelf.add(book2);
+            for (var step = 1; step < 9; step++) {
                 book2 = new THREE.Mesh(b2geometry, book1MapMaterial);
                 book2.position.set(-2, 24, 8.5 - (step * 1.1));
-                book2.castShadow = true;
                 book2.receiveShadow = true;
                 bookshelf.add(book2);
             }
+            book2 = new THREE.Mesh(b2geometry, book1MapMaterial);
+            book2.position.set(-2, 24, 8.5 - (9 * 1.1));
+            book2.castShadow = true;
+            book2.receiveShadow = true;
+            bookshelf.add(book2);
 
             //책장 밑 5
             bookshelf = new THREE.Mesh(cgeometry2, shelfMapMaterial);
@@ -1284,14 +1413,25 @@
             bookshelf.add(cube5);
 
             //책1
-            for (var step = 0; step < 20; step++) {
+            book = new THREE.Mesh(bgeometry, book2MapMaterial);
+            book.position.set(-2, 14, -8);
+            book.rotation.x = 72;
+            book.castShadow = true;
+            book.receiveShadow = true;
+            bookshelf.add(book);
+            for (var step = 1; step < 19; step++) {
                 book = new THREE.Mesh(bgeometry, book2MapMaterial);
                 book.position.set(-2, 14 - step * 0.055, -8 + step * 0.6);
                 book.rotation.x = 72 - step * 0.03;
-                book.castShadow = true;
                 book.receiveShadow = true;
                 bookshelf.add(book);
             }
+            book = new THREE.Mesh(bgeometry, book2MapMaterial);
+            book.position.set(-2, 14 - 19 * 0.055, -8 + 19 * 0.6);
+            book.rotation.x = 72 - 19 * 0.03;
+            book.castShadow = true;
+            book.receiveShadow = true;
+            bookshelf.add(book);
 
             //책2
             book2 = new THREE.Mesh(b2geometry, b2material);
@@ -1439,21 +1579,40 @@
             bookshelf.add(book);
 
             //책2
-            for (var step = 0; step < 10; step++) {
+            book2 = new THREE.Mesh(b2geometry, book1MapMaterial);
+            book2.position.set(-2, 24, 8.5);
+            book2.castShadow = true;
+            book2.receiveShadow = true;
+            bookshelf.add(book2);
+            for (var step = 1; step < 9; step++) {
                 book2 = new THREE.Mesh(b2geometry, book1MapMaterial);
                 book2.position.set(-2, 24, 8.5 - (step * 1.1));
-                book2.castShadow = true;
                 book2.receiveShadow = true;
                 bookshelf.add(book2);
             }
+            book2 = new THREE.Mesh(b2geometry, book1MapMaterial);
+            book2.position.set(-2, 24, 8.5 - (9 * 1.1));
+            book2.castShadow = true;
+            book2.receiveShadow = true;
+            bookshelf.add(book2);
 
-            for (var step = 0; step < 10; step++) {
+
+            book2 = new THREE.Mesh(b2geometry, book4MapMaterial);
+            book2.position.set(-2, 4, 8.5);
+            book2.castShadow = true;
+            book2.receiveShadow = true;
+            bookshelf.add(book2);
+            for (var step = 1; step < 9; step++) {
                 book2 = new THREE.Mesh(b2geometry, book4MapMaterial);
                 book2.position.set(-2, 4, 8.5 - (step * 1.1));
-                book2.castShadow = true;
                 book2.receiveShadow = true;
                 bookshelf.add(book2);
-            }
+            } 
+            book2 = new THREE.Mesh(b2geometry, book4MapMaterial);
+            book2.position.set(-2, 4, 8.5 - (9 * 1.1));
+            book2.castShadow = true;
+            book2.receiveShadow = true;
+            bookshelf.add(book2);
 
             trimat = new THREE.CylinderGeometry(10, 10, 1, 3, 1, false, 0, 1.6);
 
@@ -1480,14 +1639,25 @@
             tri2.receiveShadow = true;
             plane2.add(tri2)
 
-            for (var step = 0; step < 10; step++) {
+            book2 = new THREE.Mesh(b4geometry, book4MapMaterial);
+            book2.position.set(3.5, 1.25, 5.5);
+            book2.rotation.x = -1.5 * Math.PI
+            book2.castShadow = true;
+            book2.receiveShadow = true;
+            tri1.add(book2);
+            for (var step = 1; step < 9; step++) {
                 book2 = new THREE.Mesh(b4geometry, book4MapMaterial);
                 book2.position.set(3.5, 1.25 + (step * 1.5 * 1.05), 5.5);
                 book2.rotation.x = -1.5 * Math.PI
-                book2.castShadow = true;
                 book2.receiveShadow = true;
                 tri1.add(book2);
             }
+            book2 = new THREE.Mesh(b4geometry, book4MapMaterial);
+            book2.position.set(3.5, 1.25 + (9 * 1.5 * 1.05), 5.5);
+            book2.rotation.x = -1.5 * Math.PI
+            book2.castShadow = true;
+            book2.receiveShadow = true;
+            tri1.add(book2);
 
             //선반3
             bookshelf2 = new THREE.Mesh(cgeometry2, shelfMapMaterial);
@@ -1512,14 +1682,25 @@
             tri2.receiveShadow = true;
             plane2.add(tri2)
 
-            for (var step = 0; step < 10; step++) {
+            book2 = new THREE.Mesh(b4geometry, book4MapMaterial);
+            book2.position.set(3.5, 1.25, 5.5);
+            book2.rotation.x = -1.5 * Math.PI
+            book2.castShadow = true;
+            book2.receiveShadow = true;
+            tri1.add(book2);
+            for (var step = 1; step < 9; step++) {
                 book2 = new THREE.Mesh(b4geometry, book4MapMaterial);
                 book2.position.set(3.5, 1.25 + (step * 1.5 * 1.05), 5.5);
                 book2.rotation.x = -1.5 * Math.PI
-                book2.castShadow = true;
                 book2.receiveShadow = true;
                 tri1.add(book2);
             }
+            book2 = new THREE.Mesh(b4geometry, book4MapMaterial);
+            book2.position.set(3.5, 1.25 + (9 * 1.5 * 1.05), 5.5);
+            book2.rotation.x = -1.5 * Math.PI
+            book2.castShadow = true;
+            book2.receiveShadow = true;
+            tri1.add(book2);
 
             controls1p.addEventListener('lock', function () {
                 instructions.style.display = 'none';
@@ -1595,7 +1776,7 @@
                 if (controls1p.isLocked === true) {
                     raycaster.ray.origin.copy(controls1p.getObject().position);
                     raycaster.ray.origin.y -= 20;
-                    const intersections = raycaster.intersectObjects(plane, false);
+                    const intersections = raycaster.intersectObjects(scene, false);
                     const onObject = intersections.length > 0;
                     const delta = (time - prevTime) / 1000;
                     velocity.x -= velocity.x * 10.0 * delta;
@@ -1610,8 +1791,8 @@
                         velocity.y = Math.max(0, velocity.y);
                         canJump = true;
                     }
-                    controls1p.moveRight(- velocity.x * delta);
-                    controls1p.moveForward(- velocity.z * delta);
+                    controls1p.moveRight( -velocity.x * delta);
+                    controls1p.moveForward( -velocity.z * delta);
                     controls1p.getObject().position.y += (velocity.y * delta);
                     if (controls1p.getObject().position.y < 20) {
                         velocity.y = 0;
@@ -1627,7 +1808,6 @@
         }
 
         window.onload = init;
-        window.addEventListener('resize', onRisize, false);
     </script>
 </body>
 
