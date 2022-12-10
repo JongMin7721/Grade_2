@@ -102,6 +102,7 @@
             );
 
             const loader = new THREE.TextureLoader();
+            const Gloader = new THREE.GLTFLoader();
 
             //화면 마우스로 회전시키기
             const controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -132,6 +133,28 @@
             road2.position.set(85,0,60);
             plane.add(road2);
 
+            Gloader.load('squid_game_-_giant_doll/scene.gltf',
+                function (gltf) {
+                    road.add(gltf.scene);
+                    gltf.scene.scale.set(2, 2, 2);
+                    gltf.scene.rotation.x = 0.5 * Math.PI;
+                    gltf.scene.position.set(0,50,10);
+
+                    let xAxis = new THREE.Vector3(1, 0, 0);
+                    let qInitial = new THREE.Quaternion().setFromAxisAngle(xAxis, 0.5* Math.PI);
+                    let qFinal = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 1).normalize(), Math.PI);
+
+                    const positionKF = new THREE.VectorKeyframeTrack('.position', [3, 5, 8, 10], [0, -50, 10, 0, 50, 10, 0, 50, 10, 0, -50, 10]);
+                    let turnbackKF = new THREE.QuaternionKeyframeTrack('.quaternion', [1, 2, 6, 7], [qInitial.x, qInitial.y, qInitial.z, qInitial.w, qFinal.x, qFinal.y, qFinal.z, qFinal.w, qFinal.x, qFinal.y, qFinal.z, qFinal.w, qInitial.x, qInitial.y, qInitial.z, qInitial.w]);
+                    let clip = new THREE.AnimationClip('Action', 10, [turnbackKF, positionKF]);
+                    gltf.animations = clip;
+                    mixer = new THREE.AnimationMixer(gltf.scene);
+
+                    const clipAction = mixer.clipAction(gltf.animations);
+                    clipAction.play();
+                }
+            )
+
             //복도 천장
             const sphgeo1 = new THREE.SphereGeometry(2, 20);
             const sphmat1 = new THREE.MeshBasicMaterial({ color: 0xcccc00 });
@@ -145,7 +168,7 @@
             light1.shodowCameraTop = 15;
             light1.shodowCameraBottom = 15;
             light1.castShadow = true;
-            //road2.add(light1);
+            road2.add(light1);
 
             //벽
             wallmaping = loader.load("wall.jpeg");
@@ -194,11 +217,10 @@
             
             
             door = new THREE.Mesh(dgeometry, doormapmat);
-            door.rotation.y = 1.5 * Math.PI;
-            door.rotation.z = -1.5 * Math.PI;
+            door.rotation.x = 0.5 * Math.PI;
             door.receiveShadow = true;
             door.castShadow = true;
-            door.position.set(50.5, -34.5, 25);
+            door.position.set(38.5, -46.5, 25);
             plane.add(door);
 
             wall3 = new THREE.Mesh(pgeometry2, wallmapingMaterial);
@@ -1012,12 +1034,11 @@ book = new THREE.Mesh(bgeometry, book2MapMaterial);
 
 
             door = new THREE.Mesh(dgeometry, doormapmat);
-            door.rotation.y = 1.5 * Math.PI;
-            door.rotation.z = -1.5 * Math.PI;
+            door.rotation.x = 0.5 * Math.PI;
             door.receiveShadow = true;
             door.castShadow = true;
-            door.position.set(50.5, -34.5, 25);
-            plane2.add(door);
+            door.position.set(38.5, -46.5, 25);
+            plane.add(door);
 
             wall3 = new THREE.Mesh(pgeometry2, wallmapingMaterial);
             wall3.rotation.x = -1.5 * Math.PI;
@@ -1050,7 +1071,7 @@ book = new THREE.Mesh(bgeometry, book2MapMaterial);
             light1.shodowCameraTop = 15;
             light1.shodowCameraBottom = 15;
             light1.castShadow = true;
-            //celling.add(light1);
+            celling.add(light1);
 
             //책장 밑 1
 
@@ -1090,7 +1111,7 @@ book = new THREE.Mesh(bgeometry, book2MapMaterial);
             cube4 = new THREE.Mesh(cgeometry3, shelfMapMaterial);
             cube4.position.set(0, 14, 9.5);
             cube4.castShadow = true;
-            cube4.receiveShadow = true;
+            cube4.receiveShadow = true; 
             bookshelf.add(cube4);
 
             //책장 옆면2
@@ -1765,13 +1786,15 @@ book = new THREE.Mesh(bgeometry, book2MapMaterial);
             document.body.appendChild(renderer.domElement);
             document.addEventListener('keydown', onKeyDown);
             document.addEventListener('keyup', onKeyUp);
-
+            var clock = new THREE.Clock();
             renderScene();
             
-
+            
             function renderScene() {
                 requestAnimationFrame(renderScene);
                 const time = performance.now();
+                const del = clock.getDelta();
+                if (mixer) { mixer.update(del); }
 
                 if (controls1p.isLocked === true) {
                     raycaster.ray.origin.copy(controls1p.getObject().position);
