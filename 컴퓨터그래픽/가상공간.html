@@ -120,13 +120,13 @@
             plane.receiveShadow = true;
             room.add(plane);
             
-            //방2 바닥
+            //복도 바닥
             road = new THREE.Mesh(rgeometry,pmaterial);
             road.position.set(85,0,0);
             road.receiveShadow = true;
             plane.add(road);
 
-            //복도
+            //복도 천장
             road2 = new THREE.Mesh(rgeometry, pmaterial);
             road2.rotation.x = Math.PI;
             road2.receiveShadow = true;
@@ -724,7 +724,7 @@
             bookshelf.add(book3);
 
 
-book = new THREE.Mesh(bgeometry, book2MapMaterial);
+            book = new THREE.Mesh(bgeometry, book2MapMaterial);
             book.position.set(-2, 14, -8);
             book.rotation.x = 72;
             book.castShadow = true;
